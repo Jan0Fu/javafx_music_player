@@ -12,7 +12,7 @@
    <children>
       <Label fx:id="songLabel" alignment="CENTER" prefHeight="93.0" prefWidth="644.0" text="MP3 Player" textFill="#66ae3f">
          <font>
-            <Font size="63.0" />
+            <Font size="48.0" />
          </font>
       </Label>
       <ProgressBar fx:id="songProgressBar" layoutY="93.0" prefHeight="16.0" prefWidth="644.0" progress="0.0" />
@@ -42,6 +42,6 @@
          </font>
       </Button>
       <ComboBox fx:id="speedBox" layoutX="420.0" layoutY="109.0" onAction="#changeSpeed" prefHeight="36.0" prefWidth="84.0" promptText="SPEED" />
-      <Slider fx:id="volumeSlider" layoutX="504.0" layoutY="119.0" max="200.0" value="100.0" />
+      <Slider fx:id="volumeSlider" layoutX="504.0" layoutY="119.0" max="100.0" value="50.0" />
    </children>
 </AnchorPane>

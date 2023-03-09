@@ -1,5 +1,7 @@
 package com.jan0.music_player;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -46,7 +48,7 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         songs = new ArrayList<>();
-        directory = new File("music");
+        directory = new File("src/main/resources/com/jan0/music_player/music/");
         files = directory.listFiles();
         if (files != null) {
             for (File file: files) {
@@ -57,9 +59,22 @@ public class Controller implements Initializable {
         mediaPlayer = new MediaPlayer(media);
 
         songLabel.setText(songs.get(songNumber).getName());
+
+        for (int i = 0; i < speeds.length; i++) {
+            speedBox.getItems().add(String.valueOf(speeds[i]) + "%");
+        }
+        speedBox.setOnAction(this::changeSpeed);
+
+        volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                mediaPlayer.setVolume(volumeSlider.getValue() * 0.01);
+            }
+        });
     }
 
     public void playMedia() {
+        changeSpeed(null);
         mediaPlayer.play();
     }
 
@@ -72,15 +87,41 @@ public class Controller implements Initializable {
     }
 
     public void prevMedia() {
-
+        if (songNumber > 0) {
+            songNumber--;
+        }
+        else {
+            songNumber = songs.size() - 1;
+        }
+        mediaPlayer.stop();
+        media = new Media(songs.get(songNumber).toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+        songLabel.setText(songs.get(songNumber).getName());
+        playMedia();
     }
 
     public void nextMedia() {
-
+        if (songNumber < songs.size() - 1) {
+            songNumber++;
+        }
+        else {
+            songNumber = 0;
+        }
+        mediaPlayer.stop();
+        media = new Media(songs.get(songNumber).toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+        songLabel.setText(songs.get(songNumber).getName());
+        playMedia();
     }
 
     public void changeSpeed(ActionEvent event) {
-
+        if (speedBox.getValue() == null) {
+            mediaPlayer.setRate(1);
+        }
+        else {
+            mediaPlayer.setRate(Integer.parseInt(speedBox.getValue().substring(0,
+                    speedBox.getValue().length() - 1)) * 0.01);
+        }
     }
 
     public void beginTimer() {
