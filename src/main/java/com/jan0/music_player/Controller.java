@@ -74,15 +74,18 @@ public class Controller implements Initializable {
     }
 
     public void playMedia() {
+        beginTimer();
         changeSpeed(null);
         mediaPlayer.play();
     }
 
     public void pauseMedia() {
+        cancelTimer();
         mediaPlayer.pause();
     }
 
     public void resetMedia() {
+        songProgressBar.setProgress(0);
         mediaPlayer.seek(Duration.seconds(0));
     }
 
@@ -94,6 +97,9 @@ public class Controller implements Initializable {
             songNumber = songs.size() - 1;
         }
         mediaPlayer.stop();
+        if (running) {
+            cancelTimer();
+        }
         media = new Media(songs.get(songNumber).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         songLabel.setText(songs.get(songNumber).getName());
@@ -108,6 +114,9 @@ public class Controller implements Initializable {
             songNumber = 0;
         }
         mediaPlayer.stop();
+        if (running) {
+            cancelTimer();
+        }
         media = new Media(songs.get(songNumber).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         songLabel.setText(songs.get(songNumber).getName());
@@ -122,5 +131,27 @@ public class Controller implements Initializable {
             mediaPlayer.setRate(Integer.parseInt(speedBox.getValue().substring(0,
                     speedBox.getValue().length() - 1)) * 0.01);
         }
+    }
+
+    public void beginTimer() {
+        timer = new Timer();
+        task = new TimerTask() {
+
+            public void run() {
+                running = true;
+                double current = mediaPlayer.getCurrentTime().toMillis();
+                double end = media.getDuration().toSeconds();
+                songProgressBar.setProgress(current / end);
+                if (current / end == 1) {
+                    cancelTimer();
+                }
+            }
+        };
+        timer.schedule(task, 0, 1000);
+    }
+
+    public void cancelTimer() {
+        running = false;
+        timer.cancel();
     }
 }
