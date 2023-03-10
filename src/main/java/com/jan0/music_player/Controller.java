@@ -57,7 +57,6 @@ public class Controller implements Initializable {
         }
         media = new Media(songs.get(songNumber).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
-
         songLabel.setText(songs.get(songNumber).getName());
 
         for (int i = 0; i < speeds.length; i++) {
@@ -71,6 +70,7 @@ public class Controller implements Initializable {
                 mediaPlayer.setVolume(volumeSlider.getValue() * 0.01);
             }
         });
+        songProgressBar.setStyle("-fx-accent: #00FF00;");
     }
 
     public void playMedia() {
@@ -122,13 +122,5 @@ public class Controller implements Initializable {
             mediaPlayer.setRate(Integer.parseInt(speedBox.getValue().substring(0,
                     speedBox.getValue().length() - 1)) * 0.01);
         }
-    }
-
-    public void beginTimer() {
-
-    }
-
-    public void cancelTimer() {
-
     }
 }
