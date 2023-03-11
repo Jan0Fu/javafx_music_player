@@ -55,6 +55,7 @@ public class Controller implements Initializable {
                 songs.add(file);
             }
         }
+
         media = new Media(songs.get(songNumber).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         songLabel.setText(songs.get(songNumber).getName());
@@ -76,6 +77,7 @@ public class Controller implements Initializable {
     public void playMedia() {
         beginTimer();
         changeSpeed(null);
+        mediaPlayer.setVolume(volumeSlider.getValue() * 0.01);
         mediaPlayer.play();
     }
 
